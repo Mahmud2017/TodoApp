@@ -1,0 +1,46 @@
+﻿@page "/"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@using System.Collections;
+@using Todo.DataAccess.Models;
+@using Todo.GUI.Components.Services;
+@inject ITodoService TodoServices;
+
+<PageTitle>Home</PageTitle>
+
+<h1>Todo List</h1>
+
+
+@if (TaskList == null)
+{
+    <p><em>Loading tasks...</em></p>
+}
+else
+{
+    <div class="grid-container">
+        <div class="grid-item1">
+            <label>Add Task</label>
+            <input type="text" @bind="NewTask" />
+            <button @onclick="AddTask">Add</button>
+        </div>
+
+        <div class="grid-item2">
+            <label>Show: </label>
+            <select @bind="FilterType">
+                <option value="All">All</option>
+                <option value="Completed">Completed</option>
+                <option value="NotCompleted">Not Completed</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="task-grid">
+        @foreach (var task in FilteredTasks)
+        {
+            <div class="task-card @GetCardClass(task)" @onclick="() => ToggleTaskStatus(task)">
+                <p>@task.Name</p>
+            </div>
+        }
+    </div>
+}
